@@ -586,6 +586,7 @@ Demo: Code Generation
 - =actx.tag= / =actx.tag_axis=
 - =actx.compile(f)=
 
+*** TODO Why these deviations from numpy?
 *** What is an array container?
 
 - A thing that can contain actx arrays *and* other array containers
@@ -626,10 +627,10 @@ Returns a function that
 *** Actx subclassing for domain-specific transformation
 
 - Array context is where program transformation logic lives
-- =meshmode=, =grudge= define increasingly specialized array contexts
-- =actx.transform_dag=, =actx.transform_loopy=
+- Idea: Subclass to define increasingly specialized array contexts
+- Override =actx.transform_dag=, =actx.transform_loopy=
   
-* Distributed Execution
+* Distributed Execution :noexport:
 *** Representing distributed computation
 - Computation described by a global graph
 - Each rank represents a piece of that graph
@@ -661,5 +662,3 @@ Important: only with =compile=, not =freeze= (for now)
 - Tags may be any hashable value
 - Translated to actual integer MPI tags during off-line preparation
 
-* TODO Walkthrough of wave-lazy
-* TODO Walkthrough of distributed wave-lazy
