@@ -18,7 +18,7 @@ MYDIR=$(cd "$DIR" && pwd)
 INPUTDIR="$MYDIR/demos"
 OUTPUTDIR="$MYDIR/cleared-demos"
 
-for nb in $INPUTDIR/*/**/*.ipynb; do
+for nb in $INPUTDIR/**/*.ipynb; do
   DIR="$(dirname "$nb")"
   BN="$(basename "$nb")"
   RELDIR="$(realpath --relative-to="$INPUTDIR" "$DIR")"
