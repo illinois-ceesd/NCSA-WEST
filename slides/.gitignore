@@ -1,0 +1,11 @@
+*~
+out
+.*.sw[op]
+.#*
+talk.pdf
+talk.tex
+
+__pycache__
+
+cleared-demos
+.ipynb_checkpoints

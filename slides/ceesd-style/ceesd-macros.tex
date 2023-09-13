@@ -1,0 +1,440 @@
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{stackrel}
+\usepackage{bm,bbm}% bold math
+\usepackage[version=3]{mhchem}
+
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{yfonts}
+\usepackage{mathrsfs}
+\usepackage{tcolorbox}
+\usepackage{colortbl}
+\usepackage{commath}
+\usepackage{multicol}
+\usepackage{lmodern}
+
+% Support for Pandoc-beamer
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{fancyvrb}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage{siunitx}     
+\sisetup{detect-display-math=true,detect-weight=true,detect-family=true}
+
+\usepackage{tcolorbox,xcolor,framed}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{fontsize=\footnotesize,commandchars=\\\{\}}
+\definecolor{shadecolor}{rgb}{0.9,0.9,0.9}
+\newenvironment{Shaded}{\snugshade}{\endsnugshade}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+
+
+\usepackage[colorinlistoftodos, color=blue!20!white, bordercolor=gray,
+textsize=tiny]{todonotes}
+
+\setbeamercolor{structure}{fg=myOrange}
+\setbeamercolor{normal text}{fg=myBlue}
+
+\makeatletter
+\newcommand*{\overlaynumber}{\number\beamer@slideinframe}
+\makeatother
+
+\usepackage{pgf}
+\usetikzlibrary{arrows,shapes,shapes.arrows,positioning,calc,decorations.text}
+
+\usepackage{standalone}
+
+\usetheme{default}
+
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{animate}
+%\usepackage{minted}
+
+
+\definecolor{RED}{RGB}{255,0,0}  %%% 
+\definecolor{myBlue}{RGB}{19,41,75}  %%% BLUE
+\definecolor{myBlueLink}{RGB}{70,70,200}  %%% ILLINOIS BLUE
+\definecolor{myOrange}{RGB}{232,74,39}   %%% ILLINOIS ORANGE
+\definecolor{IllinoisOrange}{RGB}{232,74,39}  %%% ILLINOIS ORANGE
+\definecolor{IllinoisBlue}{RGB}{19,41,75}   %%% ILLINOIS BLUE
+\definecolor{mainTextColor}{RGB}{19,41,75}  %%% ILLINOIS BLUE
+\definecolor{myLightGray}{rgb}{0.95,0.95,0.95} 
+
+
+%%% Modify the footline to only have the page numbering in the center, nothing else
+\makeatletter
+\setbeamertemplate{footline}
+{
+ \leavevmode%
+ \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,center]{}%
+   \usebeamerfont{author in head/foot}\insertframenumber{}%
+ \end{beamercolorbox}}
+ \vskip0pt%
+}
+
+%%% Modify the headline to be null
+\setbeamertemplate{headline}{}
+
+%%% Set frame title to be transparent with black text
+\setbeamercolor{frametitle}{bg=}
+\setbeamercolor{frametitle}{fg=myOrange}
+
+
+%%% Set frame title to properly center the text
+\setbeamertemplate{frametitle}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=0ex]{frametitle}%
+    \raggedright
+    \bfseries
+    \hspace*{0.3em}%
+    \usebeamerfont{frametitle}\insertframetitle
+  \end{beamercolorbox}}
+  \vspace*{-2.75ex}
+}
+
+
+\makeatother
+
+\setbeamersize{text margin left=0.15in,text margin right=0.15in}
+
+%%% turn off navigation line (uncomment to reinstate)
+\setbeamertemplate{navigation symbols}{}
+
+%%% turn off the balls for enumerate
+\setbeamertemplate{enumerate items}[default]
+% \setbeamertemplate{itemize items}[default]
+
+\setbeamertemplate{itemize subitem}{$\bullet$}
+\setbeamertemplate{itemize subsubitem}{$*$}
+
+
+%%% Set the background image
+\usebackgroundtemplate%
+{%
+    \includegraphics[width=\paperwidth]{ceesd-slide-background.pdf}%
+}
+
+
+
+\def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+\newcommand{\prj}[2]{{\color{gray} #1 [#2]}}
+\newcommand{\noprj}[2]{}
+\newcommand{\talkref}[2]{{\color{gray} #1 [#2]}}
+\newcommand{\makered}[1]{{\color{red} #1}}
+\newcommand{\makeblue}[1]{{\color{blue} #1}}
+\newcommand{\makegreen}[1]{{\color{green} #1}}
+\newcommand{\maketeal}[1]{{\color{teal} #1}}
+\newcommand{\makeorange}[1]{{\color{orange} #1}}
+\newcommand{\makeRed}[1]{{\color{red} #1}}
+\newcommand{\makeBlue}[1]{{\color{blue} #1}}
+\newcommand{\makeCyan}[1]{{\color{cyan} #1}}
+\newcommand{\makeOrange}[1]{{\color{orange} #1}}
+\newcommand{\makeGreen}[1]{{\color{ForestGreen} #1}}
+
+\newcommand{\clink}{{\tiny({\color{blue} link})}}
+
+
+\newcommand{\myoul}[1]{\color{myBlue}\underline{\smash{\color{myOrange} #1}}\color{myOrange}}
+\newcommand{\ccdot}{\color{myBlue}$\circ$\color{myOrange}\;}
+\newcommand{\cc}[1]{\color{myBlue}#1\color{myOrange}{}}
+
+\newcommand{\HRule}[2]{{\color{myBlue}\rule{#1}{#2}}}
+\newcommand{\dRightarrow}{{\color{myOrange}\Rightarrow}}
+\newcommand{\dLeftarrow}{{\color{myBlue}\Leftarrow}}
+\newcommand{\tb}[1]{{\color{blue}(#1)}}
+\newcommand{\tr}[1]{{\color{blue}({\color{red}#1})}}
+\newcommand{\tor}[1]{{\color{blue}({\color{blue}#1})}}
+\newcommand{\lead}[1]{\textit{\color{myBlue}(#1)}}
+\newcommand{\bmath}{\boldsymbol}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\vp}{\vec{p}}
+\newcommand{\rPI}[1]{{\color{myOrange}#1}}
+\newcommand{\tPI}[1]{\texttt{\color{myOrange}#1}}
+\newcommand{\ttPI}[1]{\texttt{\color{myOrange}#1}}
+\newcommand{\cPI}[1]{\textbf{\color{myOrange}#1}}
+\newcommand{\iPI}[1]{\textit{\color{myOrange}#1}}
+\newcommand{\sPI}[1]{\textsc{\color{myOrange}#1}}
+\newcommand{\scPI}[1]{\textsc{\color{myOrange}#1}}
+\newcommand{\tabtit}[1]{\textsc{\color{myOrange}#1}}
+\newcommand{\Dpartial}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bU}{\mathbf{U}}
+\newcommand{\obsigma}{{\bar \sigma}}
+\newcommand{\vsigma}{\vec{\sigma}}
+\newcommand{\II}{{I\!I}}
+\newcommand{\memph}[1]{{\color{red} #1}}
+\newcommand{\eg}{\emph{e.g.}}
+\newcommand{\mat}[1]{\ensuremath{\mathsf{#1}}}
+\newcommand{\bvec}[1]{\ensuremath{\boldsymbol{#1}}}
+
+
+
+\newcommand{\sectionWithFrame}[1]{%
+  \section{#1}
+  \begin{frame}
+    \centerline{\LARGE \insertsection}
+  \end{frame}}
+\newcommand{\sectionAndsubWithFrame}[2]{%
+  \section{#1}
+  \begin{frame}
+    \centerline{\LARGE \insertsection}
+    \bigskip
+    \centerline{\large #2}
+  \end{frame}}
+
+\newcommand{\cM}{\mathcal{M}}
+
+\newcommand{\bn}{\mathbf{n}}
+
+\newcommand{\bbC}{\mathbb{C}}
+\newcommand{\vbbm}{{\vec{m}}}
+\newcommand{\bbM}{\mathbb{M}}
+\newcommand{\bbH}{\mathbb{H}}
+\newcommand{\bbG}{\mathbb{G}}
+\newcommand{\bbV}{\mathbb{V}}
+
+\newcommand{\vD}{{\vec D}}
+\newcommand{\vhD}{{\hat{D}}}
+\newcommand{\vg}{{\vec g}}
+\newcommand{\vphi}{{\vec\phi}}
+\newcommand{\vOmega}{{\vec\Omega}}
+
+\newcommand{\vF}{{\vec{F}}}
+\newcommand{\vf}{{\vec{f}}}
+\newcommand{\vb}{{\vec{b}}}
+\newcommand{\vq}{{\vec{q}}}
+\newcommand{\vqs}{{\vec{q}^{\,\color{red}*}}}
+
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cQ}{\mathcal{Q}}
+
+\newcommand{\rstar}{{\color{red}*}}
+\newcommand{\rchk}{{\color{red} \checkmark}}
+\newcommand{\gchk}{{\color{green} \checkmark}}
+\newcommand{\rbul}{{\color{red} $\bullet$}}
+\newcommand{\pbul}{{\color{myOrange} $\bullet$}}
+\newcommand{\bbul}{{\color{blue} $\bullet$}}
+\newcommand{\gbul}{{\color{green} $\bullet$}}
+\newcommand{\po}{{\color{myOrange} $\circ$}}
+\newcommand{\ro}{{\color{red} $\circ$}}
+\newcommand{\bd}{{\color{blue} $\bullet$}}
+
+\newcommand{\rhoi}[1][i]{\rho_{#1}}
+\newcommand{\dt}[1][t]{\partial_{#1}}
+\newcommand{\dx}[1][{\textrm{\bf x}}]{\boldsymbol \partial_{#1}}
+\newcommand{\Vi}[1][i]{\mathcal{V}_{#1}}
+\newcommand{\Mi}[1][\textswab{i}]{\mathcal{M}_{#1}}
+\newcommand{\omegai}[1][i]{\dot{\omega}_{#1}}
+\newcommand{\grav}{{\bf g}}
+\newcommand{\Etot}{\mathcal{E}}
+
+\newcommand{\mBG}{m_{\text{\tiny BG}}}
+\newcommand{\nBG}{n_{\text{\tiny BG}}}
+\newcommand{\nIp}{n_{\text{\tiny $I^+$}}}
+\newcommand{\nIm}{n_{\text{\tiny $I^-$}}}
+
+
+\newcommand{\bI}{{\mathbf{I}}}
+\newcommand{\bq}{{\mathbf{q}}}
+\newcommand{\btau}{{\boldsymbol{\tau}}}
+
+\newcommand{\bv}{{\bar{v}}}
+\newcommand{\bepsilon}{{\bar{\epsilon}}}
+
+\newcommand{\ST}{{S_{\text{\tiny T}}}}
+
+\newcommand{\vu}{\vec{u}}
+\newcommand{\vQ}{\vec{Q}}
+\newcommand{\veta}{\vec{\eta}}
+
+
+  \newcommand{\Grad}{\bnabla}
+  \newcommand{\Div}{\bnabla\vdot}
+  \newcommand{\Curl}{\bnabla\vprod}
+  \newcommand{\hGrad}{\bnabla^{}_{\!\!\mathrm{h}}}
+  \newcommand{\hDiv}{\bnabla^{}_{\!\!\mathrm{h}}\!\vdot}
+  \newcommand{\pGrad}{\bnabla^{}_{\!\!\!\perp}}
+  \newcommand{\pDiv}{\bnabla^{}_{\!\!\!\perp}\!\vdot}
+\newcommand{\pop}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pp}[1]{\ensuremath{\left[ #1 \right]}}
+\newcommand{\psq}[1]{\ensuremath{{\left[ #1 \right]}}}
+
+% Grad, div, curl, etc.
+\newcommand{\vdot}{\mathop{\mbox{\boldmath{$\cdot$}}}}
+\newcommand{\vddot}{\mathop{\mbox{\textbf{:}}}}
+\newcommand{\bnabla}{\mbox{\boldmath{$\nabla$}}}
+\newcommand{\Lapl}{\nabla^2}
+\newcommand{\hLapl}{\nabla^2_{\!\mathrm{h}}}
+\newcommand{\pLapl}{\nabla^2_{\!\!\!\perp}}
+
+\newcommand{\kION}{k_{\text{\tiny ION}}}
+\newcommand{\kDET}{k_{\text{\tiny DET}}}
+\newcommand{\kDR}{k_{\text{\tiny DR}}}
+\newcommand{\kDA}{k_{\text{\tiny DA}}}
+\newcommand{\kII}{k_{\text{\tiny $II$}}}
+
+
+\def\colorize<#1>{%
+\temporal<#1>{}{\color{red}}{}
+}
+
+\newcommand{\paper}[1]{ {\tiny #1\par} }
+\newcommand{\TODO}[1]{{\color{red} \tiny TODO: #1}}
+\newcommand{\CHK}{{\color{red} ???}}
+\newcommand{\CHKWDG}{{\color{red} ???WDG???}}
+\newcommand{\progname}[1]{\textit{#1}}
+\newcommand{\PlasComCM}{\progname{PlasComCM}}
+\newcommand{\PlasComCMtwo}{\progname{PlasCom2}}
+\newcommand{\plascomtwo}{\progname{PlasCom2}}
+\newcommand{\plusplus}[1]{#1{}\texttt{++}}
+\newcommand{\ceesdcode}{\textit{MIRGE-Com}}
+\newcommand{\ceesdMIRGE}{\textit{MIRGE}}
+\newcommand{\ceesdbasiccode}{\textit{M-Com}}
+\newcommand{\ABaTe}{\textit{A\!Ba\!Te}}
+\newcommand{\codelet}[1]{\progname{Codelet-#1}}
+\newcommand{\goldenCopy}{\rPI{golden copy}}
+\newcommand{\GoldenCopy}{\rPI{Golden copy}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\PCtwo}{\progname{PlasCom2}}
+\newcommand{\CSTUF}{\progname{CSTUF}}
+
+\newcommand{\xnew}{$^{\text{\tiny \makered{new}}}$}
+\newcommand{\xremind}{$^{\text{\tiny \makeblue{reminder}}}$}
+\newcommand{\Q}[1]{{\medskip\small\noindent\color{blue}\itshape
+    $\bullet$ #1\par}}
+\newcommand{\Qi}[1]{\begin{center}\begin{minipage}{0.9\textwidth}\footnotesize\noindent\color{blue}\itshape
+    $\circ$ #1\par\end{minipage}\end{center}\vspace*{-0.2in}}
+
+\newcommand{\insertmovie}[3]{\ifmovies{
+\movie[autostart,loop]
+{\includegraphics[width=#1\textwidth]{Movies/#2}}
+{Movies/#3}
+}
+\else{
+\includegraphics[width=#1\textwidth]{Movies/#2}
+}
+\fi
+}
+
+\usefonttheme[onlymath]{serif}
+
+\definecolor{ForestGreen}{rgb}{0.0, 0.2, 0.13}
+\definecolor{darkpastelgreen}{rgb}{0.01, 0.75, 0.24}
+\definecolor{antiquewhite}{rgb}{0.98, 0.92, 0.84}
+
+\newcommand{\planA}{$\mathbb{A}$}
+\newcommand{\planAA}{$\mathcal{A}'$}
+\newcommand{\planB}{B}
+
+\newcommand{\MUST}{{\footnotesize\color{red} \textbf{MUST}}}
+\newcommand{\WISH}{{\footnotesize\color{orange} \textbf{WISH}}}
+\newcommand{\DEFER}{{\footnotesize\color{yellow} \textbf{DEFER}}}
+\newcommand{\WDEFER}{{\footnotesize\color{lightgray} \textbf{DEFER}}}
+\newcommand{\RETURN}{{\footnotesize\color{blue} \textbf{RETURN}}}
+\newcommand{\DONE}{{\footnotesize\color{ForestGreen} \textbf{COMPLETED}}}
+\newcommand{\PLAN}{{\footnotesize\color{green} \textbf{PLANNED}}}
+\newcommand{\CURRENT}{{\footnotesize\color{cyan} \textbf{NOW}}}
+
+\newcommand{\SNL}{{\footnotesize $\;\rightarrow$ SNL}}
+\newcommand{\LLNL}{{\footnotesize $\;\rightarrow$ LLNL}}
+\newcommand{\LANL}{{\footnotesize $\;\rightarrow$ LANL}}
+
+
+\newcommand{\aMUST}{\tiny\raisebox{1.5pt}{\color{red} (\textbf{M})}}
+\newcommand{\aWISH}{\raisebox{1.5pt}{\tiny\color{orange} (\textbf{W})}}
+\newcommand{\aDEFER}{\raisebox{1.5pt}{\tiny\color{yellow} (\textbf{D})}}
+\newcommand{\aRETURN}{\raisebox{1.5pt}{\tiny\color{blue} (\textbf{R})}}
+\newcommand{\aDONE}{\raisebox{1.5pt}{\tiny\color{ForestGreen} (\textbf{C})}}
+\newcommand{\aPLAN}{\raisebox{1.5pt}{\tiny\color{green} (\textbf{P})}}
+\newcommand{\aCURRENT}{\raisebox{1.5pt}{\tiny\color{cyan} (\textbf{N})}}
+
+\newcommand{\Resp}{\cPI{Planned Response}}
+\newcommand{\Recm}{\cPI{Recommendation}}
+
+\newcommand{\gdotfill}{{\color{gray}\dotfill}}
+
+\newcommand{\later}[1]{\centerline{\color{myOrange} \ldots #1}}
+\newcommand{\recbox}[1]{
+\fcolorbox{myBlue}{antiquewhite}{
+\begin{minipage}{0.97\textwidth}
+\noindent
+\Recm:
+{#1}
+\end{minipage}}
+}
+\newcommand{\recb}[1]{\fcolorbox{myBlue}{antiquewhite}{\Recm: #1}}
+
+\newcommand{\recboxnt}[1]{
+\fcolorbox{myBlue}{antiquewhite}{
+\begin{minipage}{0.97\textwidth}
+{#1}
+\end{minipage}}
+}
+
+\arrayrulecolor{myBlue}
+
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+\definecolor{RYB1}{RGB}{207, 37, 37}
+\definecolor{RYB2}{RGB}{37, 91, 207}
+\definecolor{RYB3}{RGB}{37, 207, 91}
+\definecolor{RYB4}{RGB}{163,26,145}
+\definecolor{RYB5}{RGB}{253, 180, 98}
+\definecolor{RYB6}{RGB}{179, 222, 105}
+\definecolor{RYB7}{RGB}{128, 177, 211}
+
+\pgfplotscreateplotcyclelist{newcolors}{
+{RYB1,every mark/.append style={fill=RYB1,mark size={2.5}},mark=*},
+{RYB2,every mark/.append style={fill=RYB2},mark=square*},
+{RYB3,every mark/.append style={fill=RYB3,mark size={3}},mark=triangle*},
+{RYB4,every mark/.append style={fill=RYB4,mark size={4}},mark=x},
+{RYB5,every mark/.append style={fill=RYB5,mark size={3}},mark=oplus},
+%{RYB6,every mark/.append style={fill=RYB6,mark size={4}},mark=10-pointed star},
+{RYB7,every mark/.append style={fill=RYB7},mark=*},
+}
+\pgfplotsset{
+  %  every axis/.append style={
+ %       scale only axis,
+ %      width=0.5\textwidth,
+%    },
+    standard/.style={
+    thick,
+    compat=1.8,
+            scale only axis,
+        width=0.45\textwidth,
+  %      axis x line=middle,
+%        axis y line=middle,
+        enlarge x limits=0.05,
+        enlarge y limits=0.05,
+  %      every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
+  %      every axis y label/.style={at={(current axis.above origin)},anchor=north east},
+        max space between ticks=40,
+ %       tick label style={font=\Large},
+%label style={font=\Large},
+%legend style={font=\Large},
+cycle list name=newcolors
+%    cycle list={RYB1\\RYB2\\RYB3\\RYB4\\RYB5}
+    }
+}
