@@ -1,9 +1,14 @@
+# MIRGE Presentation
+
+Click [here](https://ssl.tiker.net/nextcloud/s/txJZaDSAoAQkWLz) to download the slides.
+
 # MIRGE Code-Along Instructions
 
 To follow along with the demos:
 
 - Click [this link](https://koelsch-hub.tiker.net/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fillinois-ceesd%2FNCSA-WEST&urlpath=lab%2Ftree%2FNCSA-WEST%2Fmirge&branch=main).
-- Use your NetID, enter your chosen password at first login (please remember it!).
+- Use your NetID as the user name, enter your chosen password at first login
+  (please remember it!).
 - Create a new notebook, enter the following line:
   ```
   !pip install -r requirements.txt

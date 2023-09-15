@@ -29,3 +29,5 @@ else
     $LATEXRUN "$f"
   done
 fi
+
+cp talk.pdf ~/nc/shared/misc/2023-09-ncsa-west.pdf
