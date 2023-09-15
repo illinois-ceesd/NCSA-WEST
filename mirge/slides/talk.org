@@ -25,17 +25,17 @@
 #+BEAMER_HEADER: \def\credit#1{{\scriptsize[#1]}}
 #+BEAMER_HEADER: \let\b=\boldsymbol
 
-#+BEAMER_HEADER: \AtBeginSection[] {
-#+BEAMER_HEADER:   \begin{frame}[shrink]{Outline}
-#+BEAMER_HEADER:     \linespread{0.8}
-#+BEAMER_HEADER:     \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/show/hide]
-#+BEAMER_HEADER:   \end{frame}
-#+BEAMER_HEADER: }
+# #+BEAMER_HEADER: \AtBeginSection[] {
+# #+BEAMER_HEADER:   \begin{frame}[shrink]{Outline}
+# #+BEAMER_HEADER:     \linespread{0.8}
+# #+BEAMER_HEADER:     \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/show/hide]
+# #+BEAMER_HEADER:   \end{frame}
+# #+BEAMER_HEADER: }
 
 #+BEAMER_HEADER: \usetikzlibrary{fit}
 #+BEAMER_HEADER: \def\evalprint#1{{\pgfmathtruncatemacro{\mathresult}{#1}\mathresult}}
 
-#+BEAMER_HEADER: \setbeamertemplate{headline}[text line]{\strut\hfill gitlab.tiker.net/presentations/2022-02-ceeesd-cs-workshop}
+#+BEAMER_HEADER: \setbeamertemplate{headline}[text line]{\strut\hfill github.com/illinois-ceesd/NCSA-WEST}
 
 #+BEAMER_HEADER: \newcommand{\software}[1]{\textsc{#1}}
 
@@ -85,6 +85,13 @@ In this workshop: *Ideas and tools* to\dots
 \credit{OpenClipart / raulxav}
 #+END_CENTER
 
+*** A Glimpse of Some Results
+
+#+ATTR_LATEX: :height 0.7\textheight
+[[./media/ok_cns.pdf]]
+
+(Simplicial DG for a Compressible Navier-Stokes Operator)
+
 *** The Case for Code Transformation
 
 **** Clip art
@@ -104,7 +111,6 @@ In this workshop: *Ideas and tools* to\dots
      :BEAMER_col: 0.7
      :END:
      
-Goals:
 - Separation of concerns:
 
   additive rather than multiplicative effort
@@ -115,7 +121,7 @@ Goals:
 
 Approach:
 - Program is a data structure
-- Start with `math'
+- Start with `math' (\approx =numpy=)
 - Gradually add detail
 - Annotations at most *descriptive*, not *prescriptive*
 # - `Own' your problem representation
@@ -246,7 +252,7 @@ How?
 
 **** Py Logo
      :PROPERTIES:
-     :BEAMER_col: 0.3
+     :BEAMER_col: 0.2
      :END:
 
 #+BEGIN_CENTER
@@ -295,14 +301,24 @@ https://github.com/inducer/pyopencl \tiny Also: \software{PyCUDA}
 \credit{Khronos Group, python.org}
 #+END_CENTER
 
-* The Moving Parts
-*** Pieces of Software
-- =pymbolic=: a scalar expression tree
-- =pytato=: an array-based expression graph
-- =loopy=: Execute, transform =LHS[i,j,k] = RHS[i,j,k]= statements on polyhedra
-  - =LHS=/=RHS= are =pymbolic= expressions
-- =arraycontext=: Switch between numpy-likes (including =pytato=)
-*** Working with Expression Trees
+*** MIRGE
+Two *intermediate representations*:
+- *High level:* an array-valued expression graph (=pytato=)
+  - think `describe a numpy computation'
+  - no concept of time (loops) or space (memory)
+  - only describes the desired result
+  - similar to JAX/Tensorflow
+- *Low level:* Assignments =LHS[i,j,k] = RHS[i,j,k]= on polyhedra
+  - =loopy= can transform those and generate code for them
+
+\medskip
+Plus a *user interface* (=arraycontext=)
+  - Switch between numpy-likes (including =pytato=)
+  - Capture information on when to evaluate
+  - Define transform paths
+
+* The Two Intermediate Representations
+*** Working with Expression Trees                                :noexport:
 
 Demos: Expression trees
 
@@ -311,12 +327,97 @@ Demos: Expression trees
 Demo: Mini Pytato
 *** Lessons from Mini Pytato
 
-- A shape axis is a loop
-- Code generation is just "make a string, somehow"
+- Graphs are an appropriate data structure for expressions
+- A shape axis becomes a loop
 - Processing graphs is necessarily recursive
 - Naive handling of common subexpressions leads to exponential complexity
-* Interlude: Polyhedral Code Generation
-*** Kernel IR: Design Aspects
+
+*** Pytato vs Mini Pytato
+**** Col 1
+  :PROPERTIES:
+  :BEAMER_col: 0.45
+  :END:
+- Computations with multiple results (=DictOfNamedArrays=)
+- Constants (=DataWrapper=)
+- Many more operators, functions
+- Arbitrary shapes (including symbolic)
+- Broadcasting
+- Slicing, Indexing
+  
+**** Col 2
+  :PROPERTIES:
+  :BEAMER_col: 0.45
+  :END:
+  
+- Reductions (e.g. sums over axes)
+- =einsum=, matrix products
+- Metadata ("tags") on arrays, axes
+- Visualization
+- Distributed compute
+- "Call loopy" as an expression node
+
+*** Design Decisions :noexport:
+- Shapes and data types are eager (i.e. known immediately)
+- Data is lazy
+  # (future goal: data-dependent shapes)
+- Disallow in-place modification
+- Retain enough information to reconstruct user program
+- Only encode math
+  - Do not encode memory layout
+  - Do not encode whether a result is stored
+
+*** =IndexLambda=: Representation using Scalar Expressions :noexport:
+
+**** Observation from mini pytato
+
+Just need a (scalar) expression for array entry =array[i,j]=.
+
+**** (end)
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+
+*Idea:* Use that
+- as a large part of the intermediate representation
+- as a pathway toward code generation
+
+  (many operations ``lower'' to scalar expressions)
+
+Demo: =IndexLambda=
+*** Common Subexpressions :noexport:
+
+Demo: Common Subexpressions
+
+*** Common Subexpressions :noexport:
+
+- Every Mapper in pytato will 'collapse' identical expressions
+  into the same (not just equal) objects
+- This turns the *tree* into a *graph*
+- Separate from the decision to allocate a temporary!
+*** Lowering to Loopy: Decisions to Make
+- Which results to store in memory
+  - OpenCL/GPU Kernels start and end in memory (\to kernel fusion)
+  - Data reuse only *within* a kernel
+- How many loops to use to compute the result (\to loop fusion)
+- How to realize those loops
+  - Tiling
+  - Sequential/Core-Parallel/SIMD-Parallel
+- Which algorithm to use (mainly for matvecs)
+  - What temporaries to use...
+  - ...and where to place them
+*** Pytato Code Generation :noexport:
+
+Demo: Code Generation
+*** How are those decisions made? :noexport:
+
+- Quite simply, for now
+- E.g.: If a node uses >1 results and has >1 users, materialize it
+- Rely on metadata (e.g. =FirstAxisIsElementsTag=) to know what to parallelize
+  - Metadata automatically applied on return from discretization operations
+  - Propagate this metadata to other intermediate results
+- Better strategies in the works
+
+*** Kernel IR: Design Aspects                                    :noexport:
 
 Single shared medium, must:
 - Express computational intent with little information loss
@@ -376,7 +477,9 @@ end do
 
 /S. Verdoolaege/ ``isl: An integer set library for the polyhedral model.'' International Congress on Mathematical Software. Springer, Berlin, Heidelberg, 2010
 
-https://github.com/indcuer/islpy
+\smallskip
+=github.com/inducer/islpy=
+
 *** Not just sets: also dependencies
 Loop *domain*: $\{(i,j): 0\le i,j\le 4 \land i\le j\} \subset \mathbb Z^2$
 
@@ -414,7 +517,7 @@ $+$ parameter: $n \mapsto \{((i,j),(i',j')): \dots\} \subset \mathbb Z^5$
   - no: $i\cdot j$, $n\bmod p$
   - yes: $n \bmod 4$, $4i-3j$
     
-*** Loopy: Simple Usage Example
+*** Loopy: Example
 
 \[
   a_i = \sum_{j=1}^{N_q} w_j \partial \psi_i(x_j) \left( \sum_{k=1}^{N_{\text{DoF}}} u_k \partial \phi_k(x_j) \right)
@@ -434,9 +537,12 @@ knl = lp.split_iname(knl, "e", 128)
 knl = lp.tag_inames(knl, {"e_outer": "g.0"})
 #+END_SRC
 
-https://github.com/inducer/loopy
+=github.com/inducer/loopy=
 
-*** Code Transforms
+*** A Taste of Loopy
+
+Demo: A Taste of Loopy (on your own)
+*** Code Transforms :noexport:
 **** Clipart
 :PROPERTIES:
 :BEAMER_col: 0.3
@@ -461,7 +567,7 @@ https://github.com/inducer/loopy
 - Texture-based data access
 - Loop collapse
 
-*** Even More Code Transforms
+*** Even More Code Transforms :noexport:
 **** Content
 :PROPERTIES:
 :BEAMER_col: 0.6
@@ -485,7 +591,7 @@ https://github.com/inducer/loopy
 #+ATTR_LATEX: :width \textwidth
 [[./media/transform-crop.pdf]]
 
-*** Automatic Operation Counting
+*** Automatic Operation Counting :noexport:
 Can obtain /parametric/, piecewise polynomial operation counts/bounds[fn:2], directly from IR:
 - \(\displaystyle \text{Flops performed} \approx \sum_{\text{Statement $s$}} |\operatorname{Domain}(s)| \cdot \text{flops}(s)\)
 - \(\displaystyle \text{Mem. Ops performed} \le \sum_{\text{Statement $s$}} |\operatorname{Domain}(s)| \cdot \text{Mem. Ops}(s)\)
@@ -495,88 +601,7 @@ Can use these for computer-aided performance model fitting[fn:3].
 
 [fn:2] Verdoolaege et al. 2007
 [fn:3] Stevens, K 2020
-* Design Aspects of Pytato
-*** Pytato vs Mini Pytato (pt. 1)
-- Computations with multiple results (=DictOfNamedArrays=)
-- Constants (=DataWrapper=)
-- Many more operators, functions
-- Arbitrary shapes (including symbolic)
-- Broadcasting
-- Slicing, Indexing
-*** Pytato vs Mini Pytato (pt. 2)
-- Reductions (e.g. sums over axes)
-- =einsum=, matrix products
-- Metadata ("tags") on arrays, axes
-- Visualization
-- DAG partitioning
-- "Call loopy" as an expression node
-
-*** Design Decisions
-- Shapes and data types are eager (i.e. known immediately)
-- Data is lazy (future goal: data-dependent shapes)
-- Disallow in-place modification
-- Retain enough information to reconstruct user program
-- Only encode math
-  - Do not encode memory layout
-  - Do not encode whether a result is stored
-
-*** =IndexLambda=: Representation using Scalar Expressions
-
-**** Observation from mini pytato
-
-Just need a (scalar) expression for array entry =array[i,j]=.
-
-**** (end)
-:PROPERTIES:
-:BEAMER_env: ignoreheading
-:END:
-
-*Idea:* Use that
-- as a large part of the intermediate representation
-- as a pathway toward code generation
-
-  (many operations ``lower'' to scalar expressions)
-
-Demo: =IndexLambda=
-*** Common Subexpressions
-
-Demo: Common Subexpressions
-
-*** Common Subexpressions
-
-- Every Mapper in pytato will 'collapse' identical expressions
-  into the same (not just equal) objects
-- This turns the *tree* into a *graph*
-- Separate from the decision to allocate a temporary!
-*** Lowering to Loopy: What's new?
-- Loopy knows about memory (Pytato doesn't)
-- Loopy knows about memory layout (Pytato doesn't)
-- Loopy knows about loops (Pytato doesn't)
-
-*** Lowering to Loopy: Decisions to Make
-- Which results to store in memory
-  - OpenCL/GPU Kernels start and end in memory (\to kernel fusion)
-  - Data reuse only *within* a kernel
-- How many loops to use to compute the result (\to loop fusion)
-- How to realize those loops
-  - Tiling
-  - Sequential/Core-Parallel/SIMD-Parallel
-- Which algorithm to use (mainly for matvecs)
-  - What temporaries to use...
-  - ...and where to place them
-*** Pytato Code Generation
-
-Demo: Code Generation
-*** How are those decisions made?
-
-- Quite simply, for now
-- E.g.: If a node uses >1 results and has >1 users, materialize it
-- Rely on metadata (e.g. =FirstAxisIsElementsTag=) to know what to parallelize
-  - Metadata automatically applied on return from discretization operations
-  - Propagate this metadata to other intermediate results
-- Better strategies in the works
-
-* Array Context
+* MIRGE in Practice
 *** What is an array context?
 
 - =actx.np=
@@ -586,8 +611,12 @@ Demo: Code Generation
 - =actx.tag= / =actx.tag_axis=
 - =actx.compile(f)=
 
-*** TODO Why these deviations from numpy?
-*** What is an array container?
+*** Let's code finite differences
+
+Demo: Finite Difference Code-Along
+
+*** TODO Why these deviations from numpy? :noexport:
+*** What is an array container? :noexport:
 
 - A thing that can contain actx arrays *and* other array containers
 - Allows "serialization" and "deserialization", i.e. generic traversals
@@ -598,7 +627,7 @@ Demo: Code Generation
 - Defined in =arraycontext=
 - Works with many =ArrayContext= operations
   
-*** What happens in =PytatoPyOpenCLACtx.compile(f)=?
+*** What happens in =PytatoPyOpenCLACtx.compile(f)=? :noexport:
 
 Returns a function that
 - once called, looks at arguments passed (which maybe array containers)
@@ -611,7 +640,7 @@ Returns a function that
   - do not call =f=
   - go straight to calling generated code
 
-*** What happens in =PytatoPyOpenCLACtx.freeze=?
+*** What happens in =PytatoPyOpenCLACtx.freeze=? :noexport:
 
 - Simple: build code to evaluate computation graph
   - Return result as actual data
@@ -624,7 +653,7 @@ Returns a function that
   - Freeze superset graph: redundant codegen, computation
   - Goal: be smarter in this situation
 
-*** Actx subclassing for domain-specific transformation
+*** Actx subclassing for domain-specific transformation :noexport:
 
 - Array context is where program transformation logic lives
 - Idea: Subclass to define increasingly specialized array contexts
