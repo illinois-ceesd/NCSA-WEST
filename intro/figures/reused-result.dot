@@ -1,0 +1,17 @@
+digraph sample {
+
+node [label="", height=0.2, width=0.2];
+xa -> xb -> xc ->xd
+xa2 -> xb;
+xa2 -> xb3 -> xd;
+xb2 -> xc2 -> xd;
+xa2 -> xb2 -> xd;
+
+ya -> yb -> yc ->yd
+ya2 -> yb;
+ya2 -> yb3 -> yd;
+yb2 -> yc2 -> yd;
+ya2 -> yb2 -> yd;
+xd -> res;
+yd -> res;
+}
