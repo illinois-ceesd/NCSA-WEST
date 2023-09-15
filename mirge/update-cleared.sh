@@ -28,3 +28,11 @@ for nb in $INPUTDIR/**/*.ipynb; do
   CONV_IPYNB="$CONV_DIR/$BN"
   with_echo "$MYDIR/demos/ipython-demo-tools/prepare-ipynb" clear-output clear-marked-inputs "$nb" "$CONV_IPYNB"
 done
+
+for nb in $INPUTDIR/*.py; do
+  DIR="$(dirname "$nb")"
+  BN="$(basename "$nb")"
+  cp "$nb" "$OUTPUTDIR"
+done
+
+
