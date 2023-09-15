@@ -29,7 +29,3 @@ Parsl (https://parsl-project.org) enables users to create parallel programs that
 1030–1100: Parsl: hands-on example      (with CEESD developers)
 1100-1200: Bring your own code (optional)
 ```
-
-## Materials for MIRGE Demo
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/illinois-ceesd/NCSA-WEST/HEAD)
